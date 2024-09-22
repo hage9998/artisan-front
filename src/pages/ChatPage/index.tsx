@@ -11,10 +11,11 @@ type ChatProps = {
 
 const styles = {
   container: {
-    maxWidth: "600px",
-    margin: "40px auto",
+    maxWidth: "900px",
+    minWidth: "700px",
+    margin: "auto",
     padding: "20px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 4px 40px rgba(0, 0, 0, 0.1)",
     borderRadius: "8px",
   },
 };

@@ -10,7 +10,7 @@ const Routes: FC = () => {
       <RouteSwitch>
         <Route path="/login" element={<LoginPage />} />
         <Route
-          path="/chat"
+          path="/"
           element={
             <PrivateRoute>
               <ChatPage userId={"97154454-9534-4ac3-9771-dd7defa0d9e1"} />

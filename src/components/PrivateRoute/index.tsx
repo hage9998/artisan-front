@@ -11,10 +11,11 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const authToken = sessionStorage.getItem("authToken");
+    console.log({ authToken });
 
     setCurrentAuthToken(authToken as string);
 
-    if (authToken) navigate("/chat");
+    if (!authToken) navigate("/login");
   }, [navigate]);
 
   return <>{currentAuthToken ? <>{children}</> : <></>}</>;

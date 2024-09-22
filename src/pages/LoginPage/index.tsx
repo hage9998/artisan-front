@@ -1,50 +1,33 @@
-import React, { useState } from "react";
-import authService from "./service/authService";
+import LoginForm from "./components/LoginForm";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LOGIN_PAGE_STYLES = {
+  container: {
+    maxWidth: "400px",
+    minWidth: "300px",
+    margin: "auto",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#f9f9f9",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "100%",
+  },
+  heading: {
+    textAlign: "center",
+    marginBottom: "20px",
+  },
+} as const;
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const data = await authService.loginIn(email, password);
-      sessionStorage.setItem("authToken", data.accessToken);
-      sessionStorage.setItem("userId", data.userId);
-
-      window.location.href = "/chat";
-    } catch (error) {
-      alert("Email or password incorrect");
-    }
-  };
-
+const LoginPage = () => {
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Senha:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Entrar</button>
-      </form>
+    <div style={LOGIN_PAGE_STYLES.container}>
+      <h2 style={LOGIN_PAGE_STYLES.heading}>Login</h2>
+      <LoginForm />
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
