@@ -3,6 +3,7 @@ import { MessageList } from "./components/MessageList";
 
 type MessageContainerProps = {
   messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   userId: string;
 };
 
@@ -21,10 +22,15 @@ const MESSAGE_CONTAINER_STYLES = {
 export const MessageContainer = ({
   messages,
   userId,
+  setMessages,
 }: MessageContainerProps) => {
   return (
     <div style={{ ...MESSAGE_CONTAINER_STYLES }}>
-      <MessageList messages={messages} userId={userId} />
+      <MessageList
+        setMessages={setMessages}
+        messages={messages}
+        userId={userId}
+      />
     </div>
   );
 };

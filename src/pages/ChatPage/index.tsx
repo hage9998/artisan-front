@@ -5,10 +5,6 @@ import { MessageInput } from "./components/MessageInput";
 import { Message } from "./types/messages";
 import messageService from "./service/messageService";
 
-type ChatProps = {
-  userId: string;
-};
-
 const styles = {
   container: {
     maxWidth: "900px",
@@ -20,21 +16,32 @@ const styles = {
   },
 };
 
-const ChatPage: React.FC<ChatProps> = ({ userId }) => {
+const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const userId = sessionStorage.getItem("userId");
 
   useEffect(() => {
-    messageService
-      .getAllMessagesByUserId(userId)
-      .then((messages) => setMessages(messages));
-  }, [userId]);
+    if (userId)
+      messageService
+        .getAllMessagesByUserId(userId)
+        .then((messages) => setMessages(messages));
+    else window.location.href = "/login";
+  }, []);
 
   return (
-    <div style={styles.container}>
-      <MessageHeader />
-      <MessageContainer messages={messages} userId={userId} />
-      <MessageInput setMessages={setMessages} userId={userId} />
-    </div>
+    <>
+      {userId && (
+        <div style={styles.container}>
+          <MessageHeader />
+          <MessageContainer
+            messages={messages}
+            userId={userId}
+            setMessages={setMessages}
+          />
+          <MessageInput setMessages={setMessages} userId={userId} />
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import authService from "../../service/authService";
+import registerService from "../../service/registerService";
 
-const LOGIN_FORM_STYLES = {
+const REGISTER_FORM_STYLES = {
   form: {
     display: "flex",
     flexDirection: "column",
@@ -26,8 +26,8 @@ const LOGIN_FORM_STYLES = {
   },
   button: {
     padding: "10px",
-    backgroundColor: "#007bff",
     marginBottom: "10px",
+    backgroundColor: "#007bff",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -43,66 +43,81 @@ const LOGIN_FORM_STYLES = {
 const FORM_LABELS = {
   email: "E-mail",
   password: "password",
-  submit: "Sign in",
-  goToRegister: "Sign up",
+  submit: "Sign up",
+  name: "name",
+  goToLogin: "Sign in",
 };
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const data = await authService.loginIn(email, password);
-      sessionStorage.setItem("authToken", data.accessToken);
-      sessionStorage.setItem("userId", data.userId);
+      await registerService.signUp(email, password, name);
 
-      window.location.href = "/";
+      window.location.href = "/login";
     } catch (error) {
-      alert("Email or password incorrect");
+      alert("E-mail not available");
     }
   };
 
   return (
-    <form style={LOGIN_FORM_STYLES.form} onSubmit={handleLogin}>
-      <div style={LOGIN_FORM_STYLES.formGroup}>
+    <form style={REGISTER_FORM_STYLES.form} onSubmit={handleRegister}>
+      <div style={REGISTER_FORM_STYLES.formGroup}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          placeholder={FORM_LABELS.name}
+          style={REGISTER_FORM_STYLES.input}
+          onFocus={(e) =>
+            (e.target.style.borderColor =
+              REGISTER_FORM_STYLES.inputFocus.borderColor)
+          }
+          onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+        />
+      </div>
+      <div style={REGISTER_FORM_STYLES.formGroup}>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder={FORM_LABELS.email}
-          style={LOGIN_FORM_STYLES.input}
+          style={REGISTER_FORM_STYLES.input}
           onFocus={(e) =>
             (e.target.style.borderColor =
-              LOGIN_FORM_STYLES.inputFocus.borderColor)
+              REGISTER_FORM_STYLES.inputFocus.borderColor)
           }
           onBlur={(e) => (e.target.style.borderColor = "#ccc")}
         />
       </div>
-      <div style={LOGIN_FORM_STYLES.formGroup}>
+      <div style={REGISTER_FORM_STYLES.formGroup}>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder={FORM_LABELS.password}
-          style={LOGIN_FORM_STYLES.input}
+          style={REGISTER_FORM_STYLES.input}
           onFocus={(e) =>
             (e.target.style.borderColor =
-              LOGIN_FORM_STYLES.inputFocus.borderColor)
+              REGISTER_FORM_STYLES.inputFocus.borderColor)
           }
           onBlur={(e) => (e.target.style.borderColor = "#ccc")}
         />
       </div>
       <button
         type="submit"
-        style={LOGIN_FORM_STYLES.button}
+        style={REGISTER_FORM_STYLES.button}
         onMouseEnter={(e) =>
           (e.currentTarget.style.backgroundColor =
-            LOGIN_FORM_STYLES.buttonHover.backgroundColor)
+            REGISTER_FORM_STYLES.buttonHover.backgroundColor)
         }
         onMouseLeave={(e) =>
           (e.currentTarget.style.backgroundColor = "#007bff")
@@ -112,20 +127,20 @@ const LoginForm = () => {
       </button>
       <button
         type="button"
-        style={LOGIN_FORM_STYLES.button}
+        style={REGISTER_FORM_STYLES.button}
         onMouseEnter={(e) =>
           (e.currentTarget.style.backgroundColor =
-            LOGIN_FORM_STYLES.buttonHover.backgroundColor)
+            REGISTER_FORM_STYLES.buttonHover.backgroundColor)
         }
         onMouseLeave={(e) =>
           (e.currentTarget.style.backgroundColor = "#007bff")
         }
-        onClick={() => (window.location.href = "/register")}
+        onClick={() => (window.location.href = "/login")}
       >
-        {FORM_LABELS.goToRegister}
+        {FORM_LABELS.goToLogin}
       </button>
     </form>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

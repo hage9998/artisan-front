@@ -3,17 +3,19 @@ import { BrowserRouter, Route, Routes as RouteSwitch } from "react-router-dom";
 import ChatPage from "../pages/ChatPage";
 import PrivateRoute from "../components/PrivateRoute";
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 const Routes: FC = () => {
   return (
     <BrowserRouter>
       <RouteSwitch>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/"
           element={
             <PrivateRoute>
-              <ChatPage userId={"97154454-9534-4ac3-9771-dd7defa0d9e1"} />
+              <ChatPage />
             </PrivateRoute>
           }
         />

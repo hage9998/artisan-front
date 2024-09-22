@@ -1,16 +1,27 @@
-import { useEffect, useRef } from "react";
+import {
+  CSSProperties,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { FaUser } from "react-icons/fa";
 import { SenderType } from "../../../../enums/senderType";
 import { Message } from "../../../../types/messages";
-import { FaUser } from "react-icons/fa";
+import { MessageEdit } from "./components/MessageEdit";
+import { MdModeEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import messageService from "../../../../service/messageService";
 
 type MessageListProps = {
   messages: Message[];
   userId: string;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 };
 
-const MESSAGE_LIST_STYLES = {
+const MESSAGE_LIST_STYLES: Record<string, CSSProperties> = {
   messageBubble: {
-    maxWidth: "80%",
+    maxWidth: "60%",
     padding: "10px",
     borderRadius: "20px",
     display: "flex",
@@ -21,6 +32,7 @@ const MESSAGE_LIST_STYLES = {
     color: "#4a0072",
     alignSelf: "flex-end",
     borderRadius: "20px 20px 0 20px",
+    overflowWrap: "anywhere",
   },
   otherMessage: {
     backgroundColor: "#f0f0f0",
@@ -31,7 +43,9 @@ const MESSAGE_LIST_STYLES = {
   },
 };
 
-export const MessageList = ({ messages, userId }: MessageListProps) => {
+export const MessageList = ({ messages, setMessages }: MessageListProps) => {
+  const [editingMessage, setEditingMessage] = useState<string>();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -40,7 +54,17 @@ export const MessageList = ({ messages, userId }: MessageListProps) => {
 
   useEffect(() => {
     scrollToBottom();
+    setEditingMessage(undefined);
   }, [messages]);
+
+  const handleOnDelete = async (messageId: string) => {
+    await messageService.deleteMessage(messageId);
+    const filteredMessages = messages.filter(
+      (message) => message.id !== messageId
+    );
+
+    setMessages(filteredMessages);
+  };
 
   return (
     <>
@@ -55,7 +79,32 @@ export const MessageList = ({ messages, userId }: MessageListProps) => {
           }}
         >
           {msg.sender !== SenderType.USER && <FaUser />}
-          <span>{msg.message}</span>
+          {!editingMessage && msg.id !== editingMessage && (
+            <span>{msg.message}</span>
+          )}
+          {msg.sender === SenderType.USER && !editingMessage && (
+            <MdModeEdit
+              style={{ minWidth: "20px", cursor: "pointer" }}
+              onClick={() => {
+                setEditingMessage(msg.id);
+              }}
+            />
+          )}
+          <MessageEdit
+            messageId={msg.id}
+            messageSender={msg.sender}
+            editingMessage={editingMessage}
+            setEditingMessage={setEditingMessage}
+            messageContent={msg.message}
+            setMessages={setMessages}
+            messages={messages}
+          />
+          {msg.sender === SenderType.USER && !editingMessage && (
+            <MdDelete
+              style={{ cursor: "pointer" }}
+              onClick={() => handleOnDelete(msg.id)}
+            />
+          )}
         </div>
       ))}
       <div ref={messagesEndRef} />
