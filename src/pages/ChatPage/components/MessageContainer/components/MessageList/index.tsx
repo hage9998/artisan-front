@@ -79,9 +79,7 @@ export const MessageList = ({ messages, setMessages }: MessageListProps) => {
           }}
         >
           {msg.sender !== SenderType.USER && <FaUser />}
-          {!editingMessage && msg.id !== editingMessage && (
-            <span>{msg.message}</span>
-          )}
+          {msg.id !== editingMessage && <span>{msg.message}</span>}
           {msg.sender === SenderType.USER && !editingMessage && (
             <MdModeEdit
               style={{ minWidth: "20px", cursor: "pointer" }}
