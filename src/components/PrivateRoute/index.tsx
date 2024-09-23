@@ -11,7 +11,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const authToken = sessionStorage.getItem("authToken");
-    console.log({ authToken });
 
     setCurrentAuthToken(authToken as string);
 
